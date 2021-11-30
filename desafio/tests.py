@@ -2,7 +2,6 @@ import datetime as dt
 
 from django.test import TestCase
 from workadays import workdays as wd
-from .forms import FiltroCotacoesForm
 
 
 class IndexTest(TestCase):
