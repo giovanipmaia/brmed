@@ -9,7 +9,7 @@ from workadays import workdays as wd
 
 def index(request):
     qs_cotacoes = Cotacao.objects.all()
-    hoje = dt.datetime.now()    
+    hoje = dt.datetime.now()
     data_inicial = wd.workdays(hoje, -5, country='England')
     data_final = wd.workdays(hoje, -1, country='England')
 
@@ -43,16 +43,17 @@ def index(request):
             url = f'{settings.API_VAT_URL}?base={settings.API_VAT_BASE}&date={data.strftime("%Y-%m-%d")}'
             response = requests.get(url).json()
             rates = response['rates']
-            for rate in rates:
-                # filtra pra pegar apenas as moedas BRL, EUR e JPY
-                if rate in ['BRL', 'EUR', 'JPY']:
-                    cotacoes[rate]['data'].append(rates[rate])
-                    moeda, created = Moeda.objects.get_or_create(abreviatura=rate)                    
-                    Cotacao.objects.create(
-                        moeda=moeda,
-                        data=data,
-                        valor=rates[rate],
-                    )
+            if data.strftime('%Y-%m-%d') == response['date']:
+                for rate in rates:
+                    # filtra pra pegar apenas as moedas BRL, EUR e JPY
+                    if rate in ['BRL', 'EUR', 'JPY']:
+                        cotacoes[rate]['data'].append(rates[rate])
+                        moeda, created = Moeda.objects.get_or_create(abreviatura=rate)                    
+                        Cotacao.objects.create(
+                            moeda=moeda,
+                            data=data,
+                            valor=rates[rate],
+                        )
 
         count += 1
 
