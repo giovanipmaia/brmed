@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from .models import Cotacao, Moeda
-from .forms import FiltroCotacoesForm
 from django.conf import settings
 import json
 import requests
