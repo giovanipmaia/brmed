@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .models import Cotacao, Moeda
+from .forms import FiltroCotacoesForm
 from django.conf import settings
 import json
 import requests
@@ -14,10 +15,15 @@ def index(request):
     data_final = wd.workdays(hoje, -1, country='England')
 
     # se o usuário selecionou as datas pelo formulário
-    if request.method == 'GET' and 'range_datas' in  request.GET:
-        range_datas = request.GET.get('range_datas')
-        data_inicial = dt.datetime.strptime(range_datas.split(' - ')[0], '%d/%m/%Y')
-        data_final = dt.datetime.strptime(range_datas.split(' - ')[1], '%d/%m/%Y')
+    if request.method == 'POST' and 'range_datas' in request.POST:
+        range_datas = request.POST.get('range_datas')
+        data1 = dt.datetime.strptime(range_datas.split(' - ')[0], '%d/%m/%Y')
+        data2 = dt.datetime.strptime(range_datas.split(' - ')[1], '%d/%m/%Y')
+        # valida as datas pra corrigir o bug encontrado
+        if data1 < hoje:
+            data_inicial = data1
+        if data2 < hoje:
+            data_final = data2
 
     cotacoes = {
         'BRL' : {'name': 'BRL', 'data': list()},
