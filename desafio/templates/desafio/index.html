@@ -25,7 +25,8 @@
                 Selecione abaixo a data inicial o período que deseja consulta. O período máximo permitido é 5 dias úteis.
             </p>
         </figure>
-        <form name="form_filtro_cotacoes">
+        <form name="form_filtro_cotacoes" method="post">
+            {% csrf_token %}
             <input type="text" name="range_datas" id="datepicker">
             <input type="submit" value="Enviar">
         </form>
